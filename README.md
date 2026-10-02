@@ -68,8 +68,13 @@ View each student's total activities and latest Match Percentage.
 
 
 ### 📝 Activity Management
+Add activities with details such as Activity Name, Category, Date, and Verification Status.
+Students can have multiple activities recorded in the system.
+Activities can be searched, edited, deleted, and filtered.
+The system maintains the student's complete activity history.
+## Screenshot for Activity Management
+<img width="1483" height="518" alt="Screenshot 2026-10-03 005041" src="https://github.com/user-attachments/assets/664ecd2f-a7cd-467c-af59-b8af459f2d75" />
 
-![Activity Management](screenshots/activities.png)
 
 ### 🔗 LCS Comparison
 
