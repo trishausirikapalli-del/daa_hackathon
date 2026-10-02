@@ -1,0 +1,733 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Longest Common Student Activity | DAA Hackathon Project</title>
+    <!-- Google Fonts: Inter & Outfit -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@500;600;700;800&display=swap" rel="stylesheet">
+    <!-- Font Awesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <!-- Top Navigation Header -->
+    <header class="app-header">
+        <div class="header-container">
+            <div class="brand-block">
+                <div class="brand-icon">
+                    <i class="fa-solid fa-network-wired"></i>
+                </div>
+                <div class="brand-text">
+                    <h1 class="brand-title">LONGEST COMMON STUDENT ACTIVITY</h1>
+                    <span class="brand-badge">DAA Dynamic Programming LCS</span>
+                </div>
+            </div>
+
+            <!-- Navigation Tabs (All on Single Page) -->
+            <nav class="nav-tabs">
+                <button class="nav-btn active" data-section="setup-section" id="nav-setup">
+                    <i class="fa-solid fa-wand-magic-sparkles"></i> <span>Setup</span>
+                </button>
+                <button class="nav-btn" data-section="dashboard-section" id="nav-dashboard">
+                    <i class="fa-solid fa-chart-pie"></i> <span>Dashboard</span>
+                </button>
+                <button class="nav-btn" data-section="students-section" id="nav-students">
+                    <i class="fa-solid fa-user-graduate"></i> <span>Students</span>
+                </button>
+                <button class="nav-btn" data-section="activities-section" id="nav-activities">
+                    <i class="fa-solid fa-list-check"></i> <span>Activities</span>
+                </button>
+                <button class="nav-btn" data-section="compare-section" id="nav-compare">
+                    <i class="fa-solid fa-code-compare"></i> <span>Compare Studio</span>
+                </button>
+                <button class="nav-btn" data-section="reports-section" id="nav-reports">
+                    <i class="fa-solid fa-file-invoice"></i> <span>Student Report</span>
+                </button>
+                <button class="nav-btn" data-section="history-section" id="nav-history">
+                    <i class="fa-solid fa-clock-rotate-left"></i> <span>History</span>
+                </button>
+            </nav>
+
+            <!-- Quick Export Actions -->
+            <div class="header-actions">
+                <a href="/api/export/excel" class="btn btn-outline-excel" title="Download Excel Report" id="hdr-excel-btn">
+                    <i class="fa-solid fa-file-excel"></i> <span>Excel</span>
+                </a>
+                <a href="/api/export/pdf" class="btn btn-outline-pdf" title="Download PDF Report" id="hdr-pdf-btn">
+                    <i class="fa-solid fa-file-pdf"></i> <span>PDF</span>
+                </a>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Container -->
+    <main class="main-content">
+        <!-- =============================================================== -->
+        <!-- SECTION 1: FIRST SCREEN / DYNAMIC SETUP (Requirements 5 & 6)   -->
+        <!-- =============================================================== -->
+        <section id="setup-section" class="spa-section active">
+            <div class="section-hero">
+                <div class="hero-badge"><i class="fa-solid fa-bolt"></i> Interactive Comparison Setup</div>
+                <h2 class="hero-title">How many students do you want to compare?</h2>
+                <p class="hero-subtitle">Enter the number of students to dynamically generate personalized forms. You can add more students anytime!</p>
+                
+                <div class="setup-input-card">
+                    <div class="input-row">
+                        <label for="student-count-input"><i class="fa-solid fa-users"></i> Number of Students:</label>
+                        <div class="number-stepper">
+                            <button type="button" class="step-btn" id="btn-count-dec"><i class="fa-solid fa-minus"></i></button>
+                            <input type="number" id="student-count-input" min="2" max="10" value="3">
+                            <button type="button" class="step-btn" id="btn-count-inc"><i class="fa-solid fa-plus"></i></button>
+                        </div>
+                        <button type="button" class="btn btn-primary" id="btn-generate-forms">
+                            <i class="fa-solid fa-table-cells"></i> Generate Forms
+                        </button>
+                    </div>
+
+                    <div class="preset-badges">
+                        <span>Quick Presets:</span>
+                        <button type="button" class="preset-pill" data-count="2">2 Students</button>
+                        <button type="button" class="preset-pill" data-count="3">3 Students</button>
+                        <button type="button" class="preset-pill" data-count="4">4 Students</button>
+                        <button type="button" class="preset-pill" data-count="5">5 Students</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Dynamic Form Container -->
+            <div id="dynamic-forms-wrapper" class="dynamic-forms-wrapper" style="display: none;">
+                <div class="wrapper-header">
+                    <h3 class="wrapper-title"><i class="fa-solid fa-users-gear"></i> Student Profiles & Sequences</h3>
+                    <div class="wrapper-actions">
+                        <button type="button" class="btn btn-secondary" id="btn-add-another-student">
+                            <i class="fa-solid fa-user-plus"></i> Add Another Student
+                        </button>
+                    </div>
+                </div>
+
+                <div id="dynamic-forms-grid" class="dynamic-forms-grid">
+                    <!-- Populated dynamically by JavaScript -->
+                </div>
+
+                <div class="wrapper-footer">
+                    <button type="button" class="btn btn-success btn-lg" id="btn-save-bulk-students">
+                        <i class="fa-solid fa-floppy-disk"></i> Save Students & Launch Comparison
+                    </button>
+                </div>
+            </div>
+        </section>
+
+        <!-- =============================================================== -->
+        <!-- SECTION 2: DASHBOARD (Requirement 15)                          -->
+        <!-- =============================================================== -->
+        <section id="dashboard-section" class="spa-section">
+            <div class="section-header">
+                <div>
+                    <h2 class="section-title"><i class="fa-solid fa-chart-simple"></i> Analytics Dashboard</h2>
+                    <p class="section-desc">Real-time statistics, sequence analytics, and dynamic Chart.js visualizations.</p>
+                </div>
+                <div class="header-tools">
+                    <button class="btn btn-outline" id="btn-refresh-dashboard">
+                        <i class="fa-solid fa-arrows-rotate"></i> Refresh
+                    </button>
+                </div>
+            </div>
+
+            <!-- Metric Stat Cards -->
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <div class="stat-icon icon-students"><i class="fa-solid fa-user-graduate"></i></div>
+                    <div class="stat-info">
+                        <span class="stat-label">Total Students</span>
+                        <h3 class="stat-value" id="stat-total-students">0</h3>
+                    </div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon icon-activities"><i class="fa-solid fa-list-check"></i></div>
+                    <div class="stat-info">
+                        <span class="stat-label">Total Activities</span>
+                        <h3 class="stat-value" id="stat-total-activities">0</h3>
+                    </div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon icon-comparisons"><i class="fa-solid fa-network-wired"></i></div>
+                    <div class="stat-info">
+                        <span class="stat-label">Comparisons Run</span>
+                        <h3 class="stat-value" id="stat-total-comparisons">0</h3>
+                    </div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon icon-lcs"><i class="fa-solid fa-trophy"></i></div>
+                    <div class="stat-info">
+                        <span class="stat-label">Latest LCS Length</span>
+                        <h3 class="stat-value" id="stat-latest-lcs">0</h3>
+                    </div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon icon-match"><i class="fa-solid fa-percent"></i></div>
+                    <div class="stat-info">
+                        <span class="stat-label">Average Match %</span>
+                        <h3 class="stat-value" id="stat-avg-match">0.0%</h3>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 4 Charts Grid -->
+            <div class="charts-grid">
+                <!-- Chart 1: Student Activity Graph -->
+                <div class="chart-card">
+                    <div class="chart-header">
+                        <h4><i class="fa-solid fa-chart-column"></i> 1. Student Activity Graph</h4>
+                        <span class="chart-sub">Student Name vs Total Activities</span>
+                    </div>
+                    <div class="chart-body">
+                        <canvas id="chart-student-activities"></canvas>
+                    </div>
+                </div>
+
+                <!-- Chart 2: Match Percentage Graph -->
+                <div class="chart-card">
+                    <div class="chart-header">
+                        <h4><i class="fa-solid fa-chart-line"></i> 2. Match Percentage Graph</h4>
+                        <span class="chart-sub">Student Name vs Match % (Exact Formula)</span>
+                    </div>
+                    <div class="chart-body">
+                        <canvas id="chart-match-percentages"></canvas>
+                    </div>
+                </div>
+
+                <!-- Chart 3: Activity Category Graph -->
+                <div class="chart-card">
+                    <div class="chart-header">
+                        <h4><i class="fa-solid fa-chart-pie"></i> 3. Activity Category Graph</h4>
+                        <span class="chart-sub">Category vs Number of Activities</span>
+                    </div>
+                    <div class="chart-body">
+                        <canvas id="chart-categories"></canvas>
+                    </div>
+                </div>
+
+                <!-- Chart 4: Individual Student Performance -->
+                <div class="chart-card">
+                    <div class="chart-header">
+                        <h4><i class="fa-solid fa-bars-progress"></i> 4. Individual Student Performance</h4>
+                        <span class="chart-sub">Total vs Common vs Missing Activities</span>
+                    </div>
+                    <div class="chart-body">
+                        <canvas id="chart-student-performance"></canvas>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- =============================================================== -->
+        <!-- SECTION 3: STUDENTS MANAGEMENT (Requirements 6 & 7)             -->
+        <!-- =============================================================== -->
+        <section id="students-section" class="spa-section">
+            <div class="section-header">
+                <div>
+                    <h2 class="section-title"><i class="fa-solid fa-users"></i> Students Directory</h2>
+                    <p class="section-desc">Manage enrolled students, search records, and track their latest activity match metrics.</p>
+                </div>
+                <div class="header-tools">
+                    <button class="btn btn-primary" id="btn-open-add-student-modal">
+                        <i class="fa-solid fa-user-plus"></i> Add Student
+                    </button>
+                </div>
+            </div>
+
+            <!-- Student Search Bar (Requirement 7) -->
+            <div class="search-filter-card">
+                <div class="search-box">
+                    <i class="fa-solid fa-magnifying-glass search-icon"></i>
+                    <input type="text" id="student-search-input" placeholder="Search student by name or roll number...">
+                    <button type="button" class="btn-clear-search" id="btn-clear-student-search"><i class="fa-solid fa-xmark"></i></button>
+                </div>
+                <div class="record-counter">
+                    <span id="students-count-badge">0 Students Found</span>
+                </div>
+            </div>
+
+            <!-- Students Table / Cards -->
+            <div class="table-card">
+                <div class="table-responsive">
+                    <table class="data-table" id="students-table">
+                        <thead>
+                            <tr>
+                                <th>Name</th>
+                                <th>Roll Number</th>
+                                <th>Branch</th>
+                                <th>Total Activities</th>
+                                <th>Latest Match %</th>
+                                <th class="text-right">Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="students-table-body">
+                            <!-- Populated dynamically -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </section>
+
+        <!-- =============================================================== -->
+        <!-- SECTION 4: ACTIVITIES MANAGEMENT (Requirements 8 & 9)           -->
+        <!-- =============================================================== -->
+        <section id="activities-section" class="spa-section">
+            <div class="section-header">
+                <div>
+                    <h2 class="section-title"><i class="fa-solid fa-list-check"></i> Student Activities</h2>
+                    <p class="section-desc">Unlimited activity sequences per student with category tracking, dates, and verification.</p>
+                </div>
+                <div class="header-tools">
+                    <button class="btn btn-primary" id="btn-open-add-activity-modal">
+                        <i class="fa-solid fa-plus"></i> Add Activity
+                    </button>
+                </div>
+            </div>
+
+            <!-- Activity Filters -->
+            <div class="filters-card">
+                <div class="filter-group">
+                    <label for="filter-activity-student">Student:</label>
+                    <select id="filter-activity-student">
+                        <option value="">All Students</option>
+                    </select>
+                </div>
+                <div class="filter-group">
+                    <label for="filter-activity-category">Category:</label>
+                    <select id="filter-activity-category">
+                        <option value="All">All Categories</option>
+                        <option value="Academic">Academic</option>
+                        <option value="Coding">Coding</option>
+                        <option value="Hackathon">Hackathon</option>
+                        <option value="Competition">Competition</option>
+                        <option value="Workshop">Workshop</option>
+                        <option value="Seminar">Seminar</option>
+                        <option value="Sports">Sports</option>
+                        <option value="Club">Club</option>
+                        <option value="Certification">Certification</option>
+                        <option value="Project">Project</option>
+                        <option value="Other">Other</option>
+                    </select>
+                </div>
+                <div class="filter-group">
+                    <label for="filter-activity-search">Search:</label>
+                    <input type="text" id="filter-activity-search" placeholder="Activity name or keyword...">
+                </div>
+                <div class="filter-group-actions">
+                    <button class="btn btn-outline" id="btn-reset-activity-filters">
+                        <i class="fa-solid fa-rotate-left"></i> Reset
+                    </button>
+                </div>
+            </div>
+
+            <!-- Activities Table -->
+            <div class="table-card">
+                <div class="table-responsive">
+                    <table class="data-table" id="activities-table">
+                        <thead>
+                            <tr>
+                                <th>#</th>
+                                <th>Student Name</th>
+                                <th>Roll No</th>
+                                <th>Activity Name</th>
+                                <th>Category</th>
+                                <th>Date</th>
+                                <th>Verification Status</th>
+                                <th>Proof / Reference</th>
+                                <th class="text-right">Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="activities-table-body">
+                            <!-- Populated dynamically -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </section>
+
+        <!-- =============================================================== -->
+        <!-- SECTION 5: MULTI-STUDENT COMPARISON & LCS (Requirements 11-14) -->
+        <!-- =============================================================== -->
+        <section id="compare-section" class="spa-section">
+            <div class="section-header">
+                <div>
+                    <h2 class="section-title"><i class="fa-solid fa-code-compare"></i> Multi-Student Comparison & LCS Studio</h2>
+                    <p class="section-desc">Select 2 or more students to execute Dynamic Programming Longest Common Subsequence (LCS) analysis.</p>
+                </div>
+                <div class="header-tools">
+                    <a href="/api/export/excel" class="btn btn-outline-excel" id="comp-download-excel-btn">
+                        <i class="fa-solid fa-file-excel"></i> Download Excel
+                    </a>
+                    <a href="/api/export/pdf" class="btn btn-outline-pdf" id="comp-download-pdf-btn">
+                        <i class="fa-solid fa-file-pdf"></i> Download PDF
+                    </a>
+                </div>
+            </div>
+
+            <!-- Student Selection Card -->
+            <div class="selection-card">
+                <div class="selection-header">
+                    <h3><i class="fa-solid fa-square-check"></i> Select Students to Compare:</h3>
+                    <div class="selection-actions">
+                        <button type="button" class="btn-link" id="btn-select-all-students">Select All</button>
+                        <span>|</span>
+                        <button type="button" class="btn-link" id="btn-deselect-all-students">Deselect All</button>
+                    </div>
+                </div>
+
+                <div id="compare-student-checkboxes" class="checkbox-grid">
+                    <!-- Populated dynamically -->
+                </div>
+
+                <div class="selection-footer">
+                    <button type="button" class="btn btn-success btn-lg" id="btn-run-comparison">
+                        <i class="fa-solid fa-play"></i> COMPARE STUDENTS
+                    </button>
+                </div>
+            </div>
+
+            <!-- Comparison Results Display (Requirements 11, 12, 13, 14) -->
+            <div id="comparison-results-panel" class="comparison-results-panel" style="display: none;">
+                <!-- LCS Sequence Banner -->
+                <div class="lcs-banner-card">
+                    <div class="lcs-meta-row">
+                        <div class="lcs-badge-group">
+                            <span class="badge badge-primary"><i class="fa-solid fa-calculator"></i> Algorithm: Dynamic Programming (LCS)</span>
+                            <span class="badge badge-success"><i class="fa-solid fa-clock"></i> <span id="comp-result-date">-</span></span>
+                            <span class="badge badge-info"><i class="fa-solid fa-hashtag"></i> Comparison ID: #<span id="comp-result-id">-</span></span>
+                        </div>
+                        <div class="lcs-length-pill">
+                            <span class="pill-label">LCS Length</span>
+                            <span class="pill-value" id="comp-result-length">0</span>
+                        </div>
+                    </div>
+
+                    <h3 class="lcs-title">Longest Common Subsequence (Chronological Activity Order):</h3>
+                    <div id="lcs-sequence-flow" class="lcs-sequence-flow">
+                        <!-- Dynamic sequence pills with arrows -->
+                    </div>
+
+                    <div class="lcs-formula-alert">
+                        <i class="fa-solid fa-circle-info"></i>
+                        <span><strong>Exact Match % Formula:</strong> <code>Match % = (Common Activities / Total Activities of that student) × 100</code></span>
+                    </div>
+                </div>
+
+                <!-- Per Student Comparison Cards Grid -->
+                <div class="students-comparison-grid" id="students-comparison-grid">
+                    <!-- Populated dynamically -->
+                </div>
+
+                <!-- Master Missing Activities Table (Requirement 14 & 18) -->
+                <div class="table-card mt-4">
+                    <div class="table-card-header">
+                        <h3><i class="fa-solid fa-circle-exclamation text-rose"></i> Missing Activities Breakdown (Not in LCS)</h3>
+                        <span class="header-sub">Activities unique to each student that are missing from the common sequence</span>
+                    </div>
+                    <div class="table-responsive">
+                        <table class="data-table" id="missing-activities-table">
+                            <thead>
+                                <tr>
+                                    <th>Student</th>
+                                    <th>Roll No</th>
+                                    <th>Total Activities</th>
+                                    <th>Common (LCS) Count</th>
+                                    <th>Missing Activities List</th>
+                                    <th>Student Match %</th>
+                                </tr>
+                            </thead>
+                            <tbody id="missing-activities-tbody">
+                                <!-- Populated dynamically -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- =============================================================== -->
+        <!-- SECTION 6: INDIVIDUAL STUDENT REPORT (Requirement 16)           -->
+        <!-- =============================================================== -->
+        <section id="reports-section" class="spa-section">
+            <div class="section-header">
+                <div>
+                    <h2 class="section-title"><i class="fa-solid fa-file-invoice"></i> Individual Student Report</h2>
+                    <p class="section-desc">Search a student by Name or Roll Number to inspect their comprehensive activity history, comparison LCS alignment, and historical match percentages.</p>
+                </div>
+            </div>
+
+            <!-- Student Search Card -->
+            <div class="report-search-card">
+                <div class="search-flex">
+                    <div class="input-icon-group">
+                        <i class="fa-solid fa-magnifying-glass"></i>
+                        <input type="text" id="report-search-query" placeholder="Enter student name or roll number (e.g. Trisha or 101)...">
+                    </div>
+                    <button type="button" class="btn btn-primary" id="btn-search-student-report">
+                        <i class="fa-solid fa-user-check"></i> Generate Report
+                    </button>
+                </div>
+
+                <div class="quick-student-chips" id="quick-student-chips">
+                    <span>Quick Select:</span>
+                    <!-- Dynamic chips -->
+                </div>
+            </div>
+
+            <!-- Student Report View -->
+            <div id="student-report-card" class="student-report-card" style="display: none;">
+                <!-- Profile Header -->
+                <div class="profile-header-card">
+                    <div class="profile-avatar">
+                        <i class="fa-solid fa-user-graduate"></i>
+                    </div>
+                    <div class="profile-details">
+                        <h3 class="profile-name" id="rep-student-name">Student Name</h3>
+                        <div class="profile-meta">
+                            <span><i class="fa-solid fa-id-card"></i> Roll No: <strong id="rep-roll-no">-</strong></span>
+                            <span><i class="fa-solid fa-graduation-cap"></i> Branch: <strong id="rep-branch">-</strong></span>
+                            <span><i class="fa-solid fa-layer-group"></i> Total Activities: <strong id="rep-total-activities">-</strong></span>
+                        </div>
+                    </div>
+                    <div class="profile-score-badge">
+                        <span class="score-label">Latest Match %</span>
+                        <h2 class="score-value" id="rep-match-pct">0.0%</h2>
+                        <span class="score-formula">(Common / Total) × 100</span>
+                    </div>
+                </div>
+
+                <!-- Comparison Information Block (REQUIREMENT 16) -->
+                <div class="report-block">
+                    <div class="block-header">
+                        <h4><i class="fa-solid fa-code-compare text-blue"></i> Comparison Information</h4>
+                        <span class="badge badge-primary" id="rep-comp-id-badge">Latest Comparison</span>
+                    </div>
+                    <div class="comp-details-grid">
+                        <div class="comp-detail-item">
+                            <span class="detail-label">Compared With:</span>
+                            <div class="detail-val" id="rep-compared-with">-</div>
+                        </div>
+                        <div class="comp-detail-item">
+                            <span class="detail-label">Common Activity Sequence (LCS):</span>
+                            <div class="detail-val text-blue font-bold" id="rep-lcs-sequence">-</div>
+                        </div>
+                        <div class="comp-detail-item">
+                            <span class="detail-label">LCS Length:</span>
+                            <div class="detail-val" id="rep-lcs-length">-</div>
+                        </div>
+                        <div class="comp-detail-item">
+                            <span class="detail-label">Common Activities Count:</span>
+                            <div class="detail-val text-emerald font-bold" id="rep-common-count">-</div>
+                        </div>
+                        <div class="comp-detail-item col-span-2">
+                            <span class="detail-label">Missing Activities (Not in LCS):</span>
+                            <div class="detail-val text-rose" id="rep-missing-activities">-</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Complete Activity History Table -->
+                <div class="report-block">
+                    <div class="block-header">
+                        <h4><i class="fa-solid fa-clock-rotate-left"></i> Complete Activity History</h4>
+                    </div>
+                    <div class="table-responsive">
+                        <table class="data-table">
+                            <thead>
+                                <tr>
+                                    <th>#</th>
+                                    <th>Activity Name</th>
+                                    <th>Category</th>
+                                    <th>Date</th>
+                                    <th>Verification Status</th>
+                                    <th>Proof / Reference</th>
+                                </tr>
+                            </thead>
+                            <tbody id="rep-activities-tbody">
+                                <!-- Populated dynamically -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <!-- Previous Comparison History for this Student -->
+                <div class="report-block">
+                    <div class="block-header">
+                        <h4><i class="fa-solid fa-timeline"></i> Previous Comparison History</h4>
+                    </div>
+                    <div class="table-responsive">
+                        <table class="data-table">
+                            <thead>
+                                <tr>
+                                    <th>Comp ID</th>
+                                    <th>Date</th>
+                                    <th>LCS Length</th>
+                                    <th>Common Count</th>
+                                    <th>Missing Activities</th>
+                                    <th>Match %</th>
+                                </tr>
+                            </thead>
+                            <tbody id="rep-history-tbody">
+                                <!-- Populated dynamically -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- =============================================================== -->
+        <!-- SECTION 7: COMPARISON HISTORY (Requirement 22)                 -->
+        <!-- =============================================================== -->
+        <section id="history-section" class="spa-section">
+            <div class="section-header">
+                <div>
+                    <h2 class="section-title"><i class="fa-solid fa-clock-rotate-left"></i> Comparison History Log</h2>
+                    <p class="section-desc">Stored runs of multi-student comparisons, LCS lengths, and direct report downloads.</p>
+                </div>
+                <div class="header-tools">
+                    <button class="btn btn-outline" id="btn-refresh-history">
+                        <i class="fa-solid fa-arrows-rotate"></i> Refresh History
+                    </button>
+                </div>
+            </div>
+
+            <div class="table-card">
+                <div class="table-responsive">
+                    <table class="data-table" id="history-table">
+                        <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>Date & Time</th>
+                                <th>Students Count</th>
+                                <th>Common Sequence (LCS)</th>
+                                <th>LCS Length</th>
+                                <th class="text-right">Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="history-table-body">
+                            <!-- Populated dynamically -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- =================================================================== -->
+    <!-- MODALS (Single Page Architecture)                                   -->
+    <!-- =================================================================== -->
+
+    <!-- Add/Edit Student Modal -->
+    <div class="modal-overlay" id="student-modal">
+        <div class="modal-card">
+            <div class="modal-header">
+                <h3 id="student-modal-title"><i class="fa-solid fa-user-plus"></i> Add Student</h3>
+                <button type="button" class="modal-close-btn" id="btn-close-student-modal"><i class="fa-solid fa-xmark"></i></button>
+            </div>
+            <form id="student-form">
+                <input type="hidden" id="student-form-id">
+                <div class="modal-body">
+                    <div class="form-group">
+                        <label for="student-form-name">Student Full Name: *</label>
+                        <input type="text" id="student-form-name" required placeholder="e.g. Trisha Sharma">
+                    </div>
+                    <div class="form-group">
+                        <label for="student-form-roll">Roll Number: *</label>
+                        <input type="text" id="student-form-roll" required placeholder="e.g. 101 or CSE2026-042">
+                    </div>
+                    <div class="form-group">
+                        <label for="student-form-branch">Branch / Department: *</label>
+                        <input type="text" id="student-form-branch" required placeholder="e.g. Computer Science & Engineering">
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-outline" id="btn-cancel-student-modal">Cancel</button>
+                    <button type="submit" class="btn btn-primary" id="btn-save-student"><i class="fa-solid fa-floppy-disk"></i> Save Student</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Add/Edit Activity Modal -->
+    <div class="modal-overlay" id="activity-modal">
+        <div class="modal-card">
+            <div class="modal-header">
+                <h3 id="activity-modal-title"><i class="fa-solid fa-plus-circle"></i> Add Activity</h3>
+                <button type="button" class="modal-close-btn" id="btn-close-activity-modal"><i class="fa-solid fa-xmark"></i></button>
+            </div>
+            <form id="activity-form">
+                <input type="hidden" id="activity-form-id">
+                <div class="modal-body">
+                    <div class="form-group" id="activity-student-select-group">
+                        <label for="activity-form-student">Select Student: *</label>
+                        <select id="activity-form-student" required>
+                            <!-- Populated dynamically -->
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="activity-form-name">Activity Name: *</label>
+                        <input type="text" id="activity-form-name" required placeholder="e.g. Python Programming, DSA, Hackathon">
+                    </div>
+                    <div class="form-group">
+                        <label for="activity-form-category">Category: *</label>
+                        <select id="activity-form-category">
+                            <option value="Academic">Academic</option>
+                            <option value="Coding">Coding</option>
+                            <option value="Hackathon">Hackathon</option>
+                            <option value="Competition">Competition</option>
+                            <option value="Workshop">Workshop</option>
+                            <option value="Seminar">Seminar</option>
+                            <option value="Sports">Sports</option>
+                            <option value="Club">Club</option>
+                            <option value="Certification">Certification</option>
+                            <option value="Project">Project</option>
+                            <option value="Custom">+ Custom Category...</option>
+                        </select>
+                    </div>
+                    <div class="form-group" id="custom-category-group" style="display: none;">
+                        <label for="activity-form-custom-category">Specify Custom Category: *</label>
+                        <input type="text" id="activity-form-custom-category" placeholder="e.g. Community Service, Robotics">
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group col-half">
+                            <label for="activity-form-date">Date: *</label>
+                            <input type="date" id="activity-form-date" required>
+                        </div>
+                        <div class="form-group col-half">
+                            <label for="activity-form-status">Verification Status: *</label>
+                            <select id="activity-form-status">
+                                <option value="Verified">Verified</option>
+                                <option value="Pending">Pending</option>
+                                <option value="Rejected">Rejected</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="activity-form-proof">Proof / Reference Certificate ID:</label>
+                        <input type="text" id="activity-form-proof" placeholder="e.g. CERT-PY-8831, SIH-TEAM-01, URL or ID">
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-outline" id="btn-cancel-activity-modal">Cancel</button>
+                    <button type="submit" class="btn btn-primary" id="btn-save-activity"><i class="fa-solid fa-floppy-disk"></i> Save Activity</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Toast Notification Container -->
+    <div id="toast-container" class="toast-container"></div>
+
+    <!-- Custom Frontend JS -->
+    <script src="{{ url_for('static', filename='dashboard.js') }}"></script>
+</body>
+</html>
