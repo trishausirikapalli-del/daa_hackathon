@@ -54,6 +54,8 @@ The system dynamically displays forms to enter each student’s Name, Roll Numbe
 It provides easy access to manage students and continue with activity comparison using LCS.
 ## Screenshot of HomePage
 <img width="1516" height="642" alt="Screenshot 2026-10-03 001354" src="https://github.com/user-attachments/assets/463376e7-a44c-4aa6-931e-cd837286c442" />
+<img width="1406" height="553" alt="Screenshot 2026-10-03 003929" src="https://github.com/user-attachments/assets/a23d9712-82d5-4f27-aa15-a03dd59d58bf" />
+
 
 
 ### 👨‍🎓 Student Management
