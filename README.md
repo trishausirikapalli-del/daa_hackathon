@@ -77,8 +77,13 @@ The system maintains the student's complete activity history.
 
 
 ### 🔗 LCS Comparison
+Select two or more students for activity comparison.
+The system applies the Longest Common Subsequence (LCS) algorithm.
+It finds the longest common sequence of activities while maintaining their order.
+It also identifies the missing activities for each student.
+## Screenshot for LCS Comparison
+<img width="603" height="558" alt="Screenshot 2026-10-03 005620" src="https://github.com/user-attachments/assets/c75dfea2-ced2-4a37-947d-1a220afc2c66" />
 
-![LCS Comparison](screenshots/comparison.png)
 
 ### 📊 Comparison Results
 
