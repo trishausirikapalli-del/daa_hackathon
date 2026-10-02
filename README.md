@@ -95,54 +95,13 @@ Gives a quick visual overview of the overall system.
 <img width="597" height="496" alt="Screenshot 2026-10-03 005946" src="https://github.com/user-attachments/assets/63683e1c-ec86-4ab1-99cc-7033cba76709" />
 
 ### 📄 Reports
+Generates detailed student activity reports.
+Includes LCS comparison and missing activity details.
+Reports can be downloaded in PDF and Excel formats.
+Excel contains activity-wise details, Match %, and comparison information.
 
-![Reports](screenshots/report.png)
-
-## 📌 Project Overview
-
-Student Activity Comparison Using LCS is a web-based system...
-
-## 🎯 Objectives
-
-- Manage student details
-- Compare student activities
-- Find the LCS
-
-## 🧠 Algorithm Used
-
-**Longest Common Subsequence (LCS)**
-
-**Technique:** Dynamic Programming
-
-## 📸 Website Screenshots
-
-### 🏠 Home Page
-
-![Home Page](screenshots/home.png)
-
-### 👨‍🎓 Student Management
-
-![Student Management](screenshots/students.png)
-
-### 📝 Activity Management
-
-![Activity Management](screenshots/activities.png)
-
-### 🔗 LCS Comparison
-
-![LCS Comparison](screenshots/comparison.png)
-
-### 📊 Comparison Results
-
-![Comparison Results](screenshots/comparison-result.png)
-
-### 📈 Dashboard
-
-![Dashboard](screenshots/dashboard.png)
-
-### 📄 Reports
-
-![Reports](screenshots/report.png)
+## Screenshot for Reports
+<img width="591" height="623" alt="Screenshot 2026-10-03 010246" src="https://github.com/user-attachments/assets/daabd22f-0447-4978-b0da-595ac03df43c" />
 
 ## 🛠️ Technologies Used
 
@@ -155,6 +114,7 @@ Student Activity Comparison Using LCS is a web-based system...
 - Chart.js
 - OpenPyXL
 - ReportLab
+## Local Host URL: 
 
 ## 🚀 Future Scope
 
