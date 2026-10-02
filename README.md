@@ -59,8 +59,13 @@ It provides easy access to manage students and continue with activity comparison
 
 
 ### 👨‍🎓 Student Management
+Add and store student details such as Name, Roll Number, and Branch.
+Search students easily using their name or roll number.
+Edit or delete student information whenever required.
+View each student's total activities and latest Match Percentage.
+## Screenshot for Student Management
+<img width="1513" height="533" alt="Screenshot 2026-10-03 004551" src="https://github.com/user-attachments/assets/88aca38b-4080-429d-8bdd-e48b1dc912f9" />
 
-![Student Management](screenshots/students.png)
 
 ### 📝 Activity Management
 
