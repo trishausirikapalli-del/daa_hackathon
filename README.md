@@ -14,7 +14,8 @@ Student Activity Comparison Using LCS is a web-based system designed to compare 
 
 ## ❓ Problem Statement
 
-
+# Longest Common Student Activity:
+Two students maintain daily activity logs represented as sequences of activity codes. Find the longest sequence of activities that appears in both logs in the same order, even if some activities are missing from either log.
 
 ## 🎯 Objectives
 
