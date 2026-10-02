@@ -85,13 +85,14 @@ It also identifies the missing activities for each student.
 <img width="603" height="558" alt="Screenshot 2026-10-03 005620" src="https://github.com/user-attachments/assets/c75dfea2-ced2-4a37-947d-1a220afc2c66" />
 
 
-### 📊 Comparison Results
-
-![Comparison Results](screenshots/comparison-result.png)
-
 ### 📈 Dashboard
+Displays important statistics such as total students and total activities.
+Shows Match Percentage for students.
+Provides charts for student activities and activity categories.
+Gives a quick visual overview of the overall system.
 
-![Dashboard](screenshots/dashboard.png)
+## Screenshot for Dashboard
+<img width="597" height="496" alt="Screenshot 2026-10-03 005946" src="https://github.com/user-attachments/assets/63683e1c-ec86-4ab1-99cc-7033cba76709" />
 
 ### 📄 Reports
 
