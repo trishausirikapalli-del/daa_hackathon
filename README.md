@@ -49,7 +49,12 @@ Two students maintain daily activity logs represented as sequences of activity c
 
 ### 🏠 Home Page
 
-![Home Page](screenshots/home.png)
+The user enters how many students they want to compare.
+The system dynamically displays forms to enter each student’s Name, Roll Number, and Branch.
+It provides easy access to manage students and continue with activity comparison using LCS.
+## Screenshot of HomePage
+<img width="1516" height="642" alt="Screenshot 2026-10-03 001354" src="https://github.com/user-attachments/assets/463376e7-a44c-4aa6-931e-cd837286c442" />
+
 
 ### 👨‍🎓 Student Management
 
