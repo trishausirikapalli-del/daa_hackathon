@@ -116,6 +116,21 @@ Excel contains activity-wise details, Match %, and comparison information.
 - ReportLab
 ## Local Host URL: http://127.0.0.1:5000
 
+## 📄 Project Documentation
+
+Complete project documentation containing the problem statement, objectives, proposed approach, algorithm, complexity analysis, implementation, test cases, results, and conclusion.
+[daa_hackathon_final_report.docx](https://github.com/user-attachments/files/32990630/daa_hackathon_final_report.docx)
+
+
+
+
+## 🎤 PowerPoint Presentation
+
+Project presentation explaining the problem, LCS algorithm, system design, implementation, test cases, results, and conclusion.
+[Longest_Common_Student_Activity_DAA_Hackathon_PPT.pptx](https://github.com/user-attachments/files/32990584/Longest_Common_Student_Activity_DAA_Hackathon_PPT.pptx)
+
+
+
 ## 🚀 Future Scope
 
 - AI-based activity recommendations
